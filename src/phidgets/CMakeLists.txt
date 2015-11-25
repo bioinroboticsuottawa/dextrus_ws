@@ -63,13 +63,13 @@ find_package(OpenCV REQUIRED)
 ## Generate messages in the 'msg' folder
 add_message_files(
    FILES
+   manager_params.msg
    accelerometer_params.msg
    encoder_params.msg
    interface_kit_params.msg
    ir_params.msg
    joystick_params.msg
    led_params.msg
-   manager_params.msg
    motor_params.msg
    pantilt_params.msg
    phsensor_params.msg
@@ -137,7 +137,7 @@ catkin_package(
 #  LIBRARIES phidgets_cat
 #  CATKIN_DEPENDS actionlib geometry_msgs nav_msgs roscpp rviz sensor_msgs sound_play std_msgs tf
 #  DEPENDS system_lib
-CATKIN_DEPENDS message_runtime
+  CATKIN_DEPENDS message_runtime message_generation
 )
 
 ###########

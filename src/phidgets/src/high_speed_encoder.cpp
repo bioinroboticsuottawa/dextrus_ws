@@ -34,7 +34,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sstream>
-#include <phidget21.h>
+#include <libphidgets/phidget21.h>
 #include <std_msgs/String.h>
 #include "phidgets/encoder_params.h"
 

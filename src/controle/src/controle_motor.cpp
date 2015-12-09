@@ -122,7 +122,7 @@ int main(int argc, char **argv) {
 	std_msgs::Int32 msg;
 	ros::Publisher pub = n.advertise<std_msgs::Int32>("controle", 1);
 	ros::Subscriber sub = n.subscribe("/phidgets/encoder", 100, encoderCallback);
-	ros::Subscriber subpos = n.subscribe("posicao", 1, posicaoCallback);
+	ros::Subscriber subpos = n.subscribe("posicao", 32, posicaoCallback);
 	ros::Rate loop_rate(120);
 
 	calibra(pub);

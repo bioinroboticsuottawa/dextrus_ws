@@ -1,0 +1,4 @@
+<launch>
+	<node name="controle" pkg="controle" type="controle_motor" />
+	<node name="phidgets" pkg="phidgets" type="high_speed_encoder" />
+</launch>

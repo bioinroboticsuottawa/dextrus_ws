@@ -1,3 +1,11 @@
+/*
+Este programa é destinado ao controle do dedo da mão Dextrus através de um controlador LQR simples.
+O feedback é feito pela placa da Phidgets.
+Subscreve-se aos tópicos /posicao - que deve conter a posicao para onde o dedo vai graduada de 0 a 100 - e /phidgets/encoder - 
+que contém a leitura do phidgets.
+Com esses dados ele calcula o valor a ser publicado no tópico /controle lido pelo arduino e usado para escrever o PWM.
+*/
+
 #include <ros/ros.h>
 #include <std_msgs/Int32.h>
 #include <std_msgs/Float64.h>
@@ -32,14 +40,14 @@ void posicaoCallback(const std_msgs::Float64::ConstPtr &ptr) {
 void calibratexto() {
 
 	std::ofstream myfile;
-	myfile.open("//home/rafaelpaiva/ros_sand_box/phidgets/calibra.txt");
+	myfile.open("./calibra.txt");
 	myfile << calibracao[0] << "\n" << calibracao[1];
 	myfile.close();
 
 }
 
 void lecalibra() {
-	std::ifstream infile("//home/rafaelpaiva/ros_sand_box/phidgets/calibra.txt");
+	std::ifstream infile("./calibra.txt");
 	std::string line;
 	std::vector<int> v;
 	while (std::getline(infile, line)) {
@@ -53,6 +61,9 @@ void lecalibra() {
 	calibracao[0] = v[0];
 	calibracao[1] = v[1];
 }
+
+//Calibracao é feita sempre que se inicia o nó. Se encontra comentado o trecho de código que salva a calibracao em um arquivo de texto.
+//A calibracao tem por finalidade achar os máximo e mínimo do dedo e converter o número publicado no tópico /posicao para a unidade do encoder. 
 
 void calibra(ros::Publisher &pub) {
 	/*bool cal;
@@ -122,7 +133,7 @@ int main(int argc, char **argv) {
 	std_msgs::Int32 msg;
 	ros::Publisher pub = n.advertise<std_msgs::Int32>("controle", 1);
 	ros::Subscriber sub = n.subscribe("/phidgets/encoder", 100, encoderCallback);
-	ros::Subscriber subpos = n.subscribe("posicao", 32, posicaoCallback);
+	ros::Subscriber subpos = n.subscribe("posicao", 1, posicaoCallback);
 	ros::Rate loop_rate(120);
 
 	calibra(pub);
@@ -137,3 +148,4 @@ int main(int argc, char **argv) {
 	}
 	return 0;
 }
+

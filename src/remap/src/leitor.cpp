@@ -26,30 +26,35 @@ private:
 	std::string _step;
 
 	bool _accept;
+	int _read;
 	std_msgs::Float64 _position;
-	YAML::Node _joint, _register;
+	YAML::Node _register;
 };
 
 int main(int argc, char **argv)
 {
 	ros::init(argc, argv, "leitor");
+	ros::start();
+
+	ROS_INFO("Starting gathering the information");
+
+	ros::Duration(5.0).sleep();
 
 	Leitor leitor;
 
 	leitor.run();
 
+	ros::shutdown();
+
 	return 0;
 }
 
-Leitor::Leitor() {
-	ros::Publisher _pub = _nh.advertise<std_msgs::Float64>("posicao", 32);
-	ros::Subscriber _sub = _nh.subscribe("/cyberglove/raw/joint_states", 32, &Leitor::receive, this);
+Leitor::Leitor() : _read(0) {
+
+	_pub = _nh.advertise<std_msgs::Float64>("/posicao", 32);
+	_sub = _nh.subscribe("/cyberglove/raw/joint_states", 32, &Leitor::receive, this);
 
 	_file.open("./file.yaml", std::fstream::out);
-
-	_joint["G_MiddleMPJ"] = 0.0;
-	_joint["G_MiddlePIJ"] = 0.0;
-	_joint["G_MiddleDIJ"] = 0.0;
 
 }
 
@@ -65,10 +70,11 @@ Leitor::~Leitor() {
 void Leitor::run() {
 	ROS_INFO("Starting registering the hand");
 
-	std::ostringstream os;
-
 	for (double pos = 0.0; pos <= 100.0; pos += 5.0) {
-		os.clear();
+		if (!ros::ok())
+			break;
+
+		std::ostringstream os;
 		os << pos;
 		_step = os.str();
 
@@ -79,13 +85,16 @@ void Leitor::run() {
 
 		ros::spinOnce();
 
-		ros::Duration(1.0).sleep();
+		ros::Duration(3.5).sleep();
 
 		_accept = true;
 
-		for (int i = 0; i < 64; ++i) {
+		ROS_INFO("Gathering...");
+		while (_read < 64 && ros::ok()) {
 			ros::spinOnce();
 		}
+		ROS_INFO("OK.");
+		_read = 0;
 	}
 
 	_file << _register;
@@ -95,11 +104,19 @@ void Leitor::receive(const sensor_msgs::JointStateConstPtr &ptr) {
 	if (!_accept)
 		return;
 
+	YAML::Node joint;
+
+	joint["G_MiddleMPJ"] = 0.0;
+	joint["G_MiddlePIJ"] = 0.0;
+	joint["G_MiddleDIJ"] = 0.0;
+
 	YAML::iterator it;
-	for (it = _joint.begin(); it != _joint.end(); ++it) {
+	for (it = joint.begin(); it != joint.end(); ++it) {
 		long pos = std::find(ptr->name.begin(), ptr->name.end(), it->first.as<std::string>()) - ptr->name.begin();
 		it->second = ptr->position[pos];
 	}
 
-	_register[_step].push_back(_joint);
+	_register[_step][_read] = joint;
+
+	++_read;
 }

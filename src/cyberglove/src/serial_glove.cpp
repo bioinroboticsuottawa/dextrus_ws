@@ -45,8 +45,7 @@ CybergloveSerial::CybergloveSerial(std::string serial_port,
 		boost::function<void(std::vector<float>, bool)> callback) :
 		nb_msgs_received(0), glove_pos_index(0), timestamp_bytes_(0), byte_index_(
 				0), current_value(0), sensor_value_(0), light_on(true), button_on(
-				true), no_errors(true), cyberglove_version_(cyberglove_version), reception_state_(
-				INITIAL), streaming_protocol_(streaming_protocol) {
+				true), no_errors(true), cyberglove_version_(cyberglove_version), reception_state_(INITIAL), streaming_protocol_(streaming_protocol) {
 	//initialize the vector of positions with 0s
 	for (int i = 0; i < glove_size; ++i) {
 		glove_positions.push_back(0);
@@ -137,6 +136,7 @@ int CybergloveSerial::start_stream() {
 			cereal_port->flush();
 		} else {
 			//start streaming by writing S to the serial port
+			printf("--- sending S\n");
 			cereal_port->write("S", 1);
 			cereal_port->flush();
 		}
@@ -150,11 +150,10 @@ void CybergloveSerial::stream_callback(char* world, int length) {
 	std::string v1_current;
 	for (int i = 0; i < length; ++i) {
 		current_value = (unsigned int) (unsigned char) world[i];
-
+		char aux[30];
+		sprintf(aux, "0x%X", current_value);
+		std::cout << aux << std::endl;
 		if ((cyberglove_version_ == "3") && (streaming_protocol_ == "16bit")) {
-			char aux[30];
-//        sprintf(aux, "0x%X", current_value);
-//        std::cout << aux << std::endl;
 			switch (reception_state_) {
 			case reception_16bit::SYNCHRONIZATION_1:
 				switch (current_value) {
@@ -256,6 +255,7 @@ void CybergloveSerial::stream_callback(char* world, int length) {
 			case INITIAL:
 				switch (current_value) {
 				case 'S':
+					
 					//the line starts with S, followed by the sensors values
 					++nb_msgs_received;
 					//reset the index to 0

@@ -117,6 +117,7 @@ add_executable(cyberglove_node
   src/serial_glove.cpp
   src/xml_calibration_parser.cpp
   src/cyberglove_service.cpp
+  src/myserial.py
 )
 
 ## Add cmake target dependencies of the executable/library

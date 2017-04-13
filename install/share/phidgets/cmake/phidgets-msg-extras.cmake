@@ -1,0 +1,2 @@
+set(phidgets_MESSAGE_FILES "msg/manager_params.msg;msg/accelerometer_params.msg;msg/encoder_params.msg;msg/interface_kit_params.msg;msg/ir_params.msg;msg/joystick_params.msg;msg/led_params.msg;msg/motor_params.msg;msg/pantilt_params.msg;msg/phsensor_params.msg;msg/pid_params.msg;msg/rfid_params.msg;msg/servo_params.msg;msg/spatial_params.msg;msg/stepper_params.msg;msg/textlcd_params.msg")
+set(phidgets_SERVICE_FILES "srv/interface_kit.srv;srv/lidar_control.srv;srv/pid.srv;srv/servo_reference.srv")

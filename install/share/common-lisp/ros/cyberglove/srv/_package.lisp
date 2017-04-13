@@ -1,0 +1,15 @@
+(cl:defpackage cyberglove-srv
+  (:use )
+  (:export
+   "START"
+   "<START-REQUEST>"
+   "START-REQUEST"
+   "<START-RESPONSE>"
+   "START-RESPONSE"
+   "CALIBRATION"
+   "<CALIBRATION-REQUEST>"
+   "CALIBRATION-REQUEST"
+   "<CALIBRATION-RESPONSE>"
+   "CALIBRATION-RESPONSE"
+  ))
+

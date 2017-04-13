@@ -101,8 +101,7 @@ void Leitor::run() {
 }
 
 void Leitor::receive(const sensor_msgs::JointStateConstPtr &ptr) {
-	if (!_accept)
-		return;
+	if (!_accept) return;
 
 	YAML::Node joint;
 

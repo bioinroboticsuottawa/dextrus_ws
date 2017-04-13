@@ -22,6 +22,7 @@ find_package(catkin REQUIRED COMPONENTS
   phidgets
   roscpp
   std_msgs
+  message_generation
 )
 
 ## System dependencies are found with CMake's conventions
@@ -65,11 +66,10 @@ find_package(catkin REQUIRED COMPONENTS
 # )
 
 ## Generate services in the 'srv' folder
-# add_service_files(
-#   FILES
-#   Service1.srv
-#   Service2.srv
-# )
+ add_service_files(
+   FILES
+   ResetCalibration.srv
+ )
 
 ## Generate actions in the 'action' folder
 # add_action_files(
@@ -79,10 +79,10 @@ find_package(catkin REQUIRED COMPONENTS
 # )
 
 ## Generate added messages and services with any dependencies listed here
-# generate_messages(
-#   DEPENDENCIES
-#   std_msgs
-# )
+ generate_messages(
+   DEPENDENCIES
+   std_msgs
+ )
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -144,15 +144,23 @@ include_directories(
 ## Declare a C++ executable
 add_executable(leitor src/leitor.cpp)
 add_executable(comando src/comando.cpp)
+add_executable(remaper2 src/remaper2.cpp)
+add_executable(reset_calibration_client src/reset_calibration_client.cpp)
+
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
 add_dependencies(leitor ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_dependencies(comando ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(remaper2 ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(reset_calibration_client ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+
 
 ## Specify libraries to link a library or executable target against
 target_link_libraries(leitor ${catkin_LIBRARIES} yaml-cpp)
 target_link_libraries(comando ${catkin_LIBRARIES} yaml-cpp)
+target_link_libraries(remaper2 ${catkin_LIBRARIES} yaml-cpp)
+target_link_libraries(reset_calibration_client ${catkin_LIBRARIES} yaml-cpp)
 
 #############
 ## Install ##

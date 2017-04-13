@@ -1,6 +1,6 @@
 <launch>
-  <arg name="serial_port" default="/dev/ttyUSB0"/>
-  <arg name="calibration" default="$(find sr_cyberglove_config)/calibrations/cyberglove.cal"/>
+  <arg name="serial_port" default="/dev/ttyS0"/>
+  <arg name="calibration" default="$(find sr_cyberglove_config)/calibrations/calibrationTeste.cal"/>
   <arg name="version" default="2"/>
   <arg name="protocol" default="8bit"/>
   <!-- Activate internal cybeglove data filtering -->
@@ -9,7 +9,7 @@
   <param name="robot_description" textfile="$(find
   cyberglove)/model/cyberglove.xml"/>
 
-  <node pkg="cyberglove" name="cyberglove" type="cyberglove_node" >
+  <node pkg="cyberglove" name="cyberglove" type="cyberglove_node" output="screen" >
     <param name="cyberglove_prefix" type="string" value="/cyberglove" />
     <!-- We're doing some oversampling. You can set the frequency at which
 	 the data are sampled as well as the frequency at which they're published
@@ -19,7 +19,7 @@
 	   - 10  -> 10 Hz
 	   - 1  -> 1 Hz
     -->
-    <param name="sampling_frequency" type="double" value="100.0" />
+    <param name="sampling_frequency" type="double" value="100.0"/>
     <param name="publish_frequency" type="double" value="100.0" />
     <param name="path_to_glove" type="string" value="$(arg serial_port)" />
     <param name="path_to_calibration" type="string" value="$(arg calibration)" />
